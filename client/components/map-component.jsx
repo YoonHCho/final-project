@@ -67,11 +67,15 @@ export default class MapComponent extends React.Component {
             onLoad={this.onLoad}
             onPlaceChanged={this.onPlaceChanged}
           >
-            <input
-              type='text'
-              placeholder='Enter a place'
-              className='input-style'
-            />
+            <div>
+              <input
+                type='text'
+                placeholder='Enter a place'
+                className='input-style'
+                autoFocus
+              />
+              <i className="fa-solid fa-magnifying-glass"></i>
+            </div>
           </Autocomplete>
           { this.state.markerPosition ? <Marker position={this.state.markerPosition} /> : null}
         </GoogleMap>

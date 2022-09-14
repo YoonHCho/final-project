@@ -1,10 +1,9 @@
 import React from 'react';
-import HelloWorld from '../components/hello-world';
+import MapComponent from '../components/map-component';
 
 export default function Home(props) {
+
   return (
-    <div>
-      <HelloWorld />
-    </div>
+    <MapComponent />
   );
 }

@@ -17,7 +17,7 @@ export default class Log extends React.Component {
 
   confirm(e) {
     e.preventDefault();
-    const { markerPosition, name, hideLogModal, logs } = this.context;
+    const { markerPosition, name, hideLogModal } = this.context;
     const logLatLngName = {
       log: this.state.log,
       location: name,
@@ -25,30 +25,8 @@ export default class Log extends React.Component {
       longitude: markerPosition.lng
     };
 
-    const option = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(logLatLngName)
-    };
-
-    let updateLogs;
-    // console.log('this.props.logs: ', this.props.logs);
-    // console.log('logs ininin: ', logs);
-    fetch('/api/log/', option)
-      .then(res => res.json())
-      .then(newLog => {
-        // updateLogs = logs.concat(newLog);
-        updateLogs = logs.concat(newLog);
-        this.props.setState({ logs: updateLogs });
-      })
-      .catch(err => {
-        console.error('Error in POST', err);
-      });
-
+    this.props.onSubmit(logLatLngName);
     this.setState({ log: '' });
-    // console.log('in log.jsx updateLogs: ', updateLogs);
     hideLogModal();
   }
 

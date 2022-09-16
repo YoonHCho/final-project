@@ -33,6 +33,7 @@ export default class MapComponent extends React.Component {
     this.nullValue = this.nullValue.bind(this);
     this.showLogModal = this.showLogModal.bind(this);
     this.hideLogModal = this.hideLogModal.bind(this);
+    this.addLog = this.addLog.bind(this);
   }
 
   componentDidMount() {
@@ -59,6 +60,26 @@ export default class MapComponent extends React.Component {
     }
   }
 
+  addLog(newLog) {
+    const option = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newLog)
+    };
+
+    fetch('/api/log/', option)
+      .then(res => res.json())
+      .then(newLog => {
+        const updateLogs = this.state.logs.concat(newLog);
+        this.setState({ logs: updateLogs });
+      })
+      .catch(err => {
+        console.error('Error in POST', err);
+      });
+  }
+
   nullValue(e) {
     if (e.target.value === '') {
       this.setState({ markerPosition: null, name: null });
@@ -75,9 +96,6 @@ export default class MapComponent extends React.Component {
 
   hideLogModal(updateLog) {
     this.setState({ logModal: false });
-    // this.setState({ logs: updateLog });
-    // console.log('updateLog: ', updateLog);
-    // console.log('this.state.logs: ', this.state.logs);
   }
 
   render() {
@@ -93,9 +111,8 @@ export default class MapComponent extends React.Component {
     const { markerPosition, name, logModal, logs } = this.state;
     const { showLogModal, hideLogModal } = this;
     const contextValue = { markerPosition, name, logModal, logs, showLogModal, hideLogModal };
-    // const fakekey = 'dafdsf'; //  process.env.GOOGLE_MAPS_API_KEY
-    return (
 
+    return (
       <AppContext.Provider value={contextValue}>
         <>
           <LoadScript
@@ -129,7 +146,7 @@ export default class MapComponent extends React.Component {
               { this.state.logs.length > 0 && <LogLists logs={this.state.logs} /> }
             </GoogleMap>
           { this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
-          { this.state.logModal && <Log /> }
+          { this.state.logModal && <Log onSubmit={ this.addLog } /> }
           </LoadScript>
         </>
       </AppContext.Provider>

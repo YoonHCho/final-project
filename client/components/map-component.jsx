@@ -2,6 +2,7 @@ import React from 'react';
 import { GoogleMap, LoadScript, Autocomplete, Marker } from '@react-google-maps/api';
 import Log from './log';
 import AppContext from '../lib/app-context';
+import LogLists from './places';
 
 const containerStyle = {
   width: '100%',
@@ -23,7 +24,8 @@ export default class MapComponent extends React.Component {
       userLong: null,
       markerPosition: null,
       name: '',
-      logModal: false
+      logModal: false,
+      logs: []
     };
     this.autocomplete = null;
     this.onLoad = this.onLoad.bind(this);
@@ -37,6 +39,10 @@ export default class MapComponent extends React.Component {
     navigator.geolocation.getCurrentPosition(userCoords => {
       this.setState({ userLat: userCoords.coords.latitude, userLong: userCoords.coords.longitude });
     });
+
+    fetch('/api/log/')
+      .then(result => result.json())
+      .then(logs => this.setState({ logs }));
   }
 
   onLoad(autocomplete) {
@@ -67,8 +73,11 @@ export default class MapComponent extends React.Component {
     }
   }
 
-  hideLogModal() {
+  hideLogModal(updateLog) {
     this.setState({ logModal: false });
+    // this.setState({ logs: updateLog });
+    // console.log('updateLog: ', updateLog);
+    // console.log('this.state.logs: ', this.state.logs);
   }
 
   render() {
@@ -81,9 +90,10 @@ export default class MapComponent extends React.Component {
         lng: this.state.userLong
       };
     }
-    const { markerPosition, name, logModal } = this.state;
+    const { markerPosition, name, logModal, logs } = this.state;
     const { showLogModal, hideLogModal } = this;
-    const contextValue = { markerPosition, name, logModal, showLogModal, hideLogModal };
+    const contextValue = { markerPosition, name, logModal, logs, showLogModal, hideLogModal };
+    // const fakekey = 'dafdsf'; //  process.env.GOOGLE_MAPS_API_KEY
     return (
 
       <AppContext.Provider value={contextValue}>
@@ -116,10 +126,11 @@ export default class MapComponent extends React.Component {
                 </div>
               </Autocomplete>
               { this.state.markerPosition && <Marker position={this.state.markerPosition} /> }
+              { this.state.logs.length > 0 && <LogLists logs={this.state.logs} /> }
             </GoogleMap>
-          </LoadScript>
-          {this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
+          { this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
           { this.state.logModal && <Log /> }
+          </LoadScript>
         </>
       </AppContext.Provider>
     );

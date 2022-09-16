@@ -25,20 +25,7 @@ export default class Log extends React.Component {
       longitude: markerPosition.lng
     };
 
-    const option = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(logLatLngName)
-    };
-
-    fetch('/api/log/', option)
-      .then(res => res.json())
-      .catch(err => {
-        console.error('Error in POST', err);
-      });
-
+    this.props.onSubmit(logLatLngName);
     this.setState({ log: '' });
     hideLogModal();
   }

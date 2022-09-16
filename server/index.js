@@ -17,8 +17,19 @@ app.use(express.json());
 
 app.use(staticMiddleware);
 
-app.get('/api/hello', (req, res) => {
-  res.json({ hello: 'world' });
+app.get('/api/log/', (req, res, next) => {
+  const sql = `
+    SELECT "logId",
+           "log",
+           "location",
+           "latitude",
+           "longitude"
+    FROM   "logs";
+  `;
+
+  db.query(sql)
+    .then(result => res.json(result.rows))
+    .catch(err => next(err));
 });
 
 app.post('/api/log/', (req, res, next) => {

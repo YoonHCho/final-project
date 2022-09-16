@@ -2,6 +2,7 @@ import React from 'react';
 import { GoogleMap, LoadScript, Autocomplete, Marker } from '@react-google-maps/api';
 import Log from './log';
 import AppContext from '../lib/app-context';
+import LogLists from './places';
 
 const containerStyle = {
   width: '100%',
@@ -23,7 +24,8 @@ export default class MapComponent extends React.Component {
       userLong: null,
       markerPosition: null,
       name: '',
-      logModal: false
+      logModal: false,
+      logs: []
     };
     this.autocomplete = null;
     this.onLoad = this.onLoad.bind(this);
@@ -31,12 +33,17 @@ export default class MapComponent extends React.Component {
     this.nullValue = this.nullValue.bind(this);
     this.showLogModal = this.showLogModal.bind(this);
     this.hideLogModal = this.hideLogModal.bind(this);
+    this.addLog = this.addLog.bind(this);
   }
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(userCoords => {
       this.setState({ userLat: userCoords.coords.latitude, userLong: userCoords.coords.longitude });
     });
+
+    fetch('/api/log/')
+      .then(result => result.json())
+      .then(logs => this.setState({ logs }));
   }
 
   onLoad(autocomplete) {
@@ -53,6 +60,26 @@ export default class MapComponent extends React.Component {
     }
   }
 
+  addLog(newLog) {
+    const option = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newLog)
+    };
+
+    fetch('/api/log/', option)
+      .then(res => res.json())
+      .then(newLog => {
+        const updateLogs = this.state.logs.concat(newLog);
+        this.setState({ logs: updateLogs });
+      })
+      .catch(err => {
+        console.error('Error in POST', err);
+      });
+  }
+
   nullValue(e) {
     if (e.target.value === '') {
       this.setState({ markerPosition: null, name: null });
@@ -67,7 +94,7 @@ export default class MapComponent extends React.Component {
     }
   }
 
-  hideLogModal() {
+  hideLogModal(updateLog) {
     this.setState({ logModal: false });
   }
 
@@ -81,11 +108,11 @@ export default class MapComponent extends React.Component {
         lng: this.state.userLong
       };
     }
-    const { markerPosition, name, logModal } = this.state;
+    const { markerPosition, name, logModal, logs } = this.state;
     const { showLogModal, hideLogModal } = this;
-    const contextValue = { markerPosition, name, logModal, showLogModal, hideLogModal };
-    return (
+    const contextValue = { markerPosition, name, logModal, logs, showLogModal, hideLogModal };
 
+    return (
       <AppContext.Provider value={contextValue}>
         <>
           <LoadScript
@@ -116,10 +143,11 @@ export default class MapComponent extends React.Component {
                 </div>
               </Autocomplete>
               { this.state.markerPosition && <Marker position={this.state.markerPosition} /> }
+              { this.state.logs.length > 0 && <LogLists logs={this.state.logs} /> }
             </GoogleMap>
+          { this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
+          { this.state.logModal && <Log onSubmit={ this.addLog } /> }
           </LoadScript>
-          {this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
-          { this.state.logModal && <Log /> }
         </>
       </AppContext.Provider>
     );

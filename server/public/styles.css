@@ -21,7 +21,7 @@
 .save {
   position: absolute;
   bottom: 3%;
-  right: 10%;
+  right: 20%;
 }
 
 /* FOR LOG MODAL */
@@ -41,7 +41,6 @@
 }
 
 .textarea {
-  /* border: 1px solid red; */
   outline: none;
   resize: none;
   border-color: transparent;
@@ -81,10 +80,6 @@
   padding-right: 2%;
 }
 
-p {
-  margin: 0;
-}
-
 .fa-circle-xmark {
   font-size: 45px;
   color: #f00;
@@ -115,6 +110,12 @@ i:hover {
 }
 
 /* END OF LOG MODAL */
+
+@media only screen and (min-width: 520px) {
+  .save {
+    right: 10%;
+  }
+}
 
 @media only screen and (min-width: 768px) {
   .input-style {

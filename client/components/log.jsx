@@ -18,7 +18,6 @@ export default class Log extends React.Component {
   confirm(e) {
     e.preventDefault();
     const { markerPosition, name, hideLogModal } = this.context;
-    // console.log('log all: ', this.state.log, markerPosition.lat, markerPosition.lng, name);
     const logLatLngName = {
       log: this.state.log,
       location: name,
@@ -56,7 +55,7 @@ export default class Log extends React.Component {
               placeholder="Enter your log here..."
               value={ this.state.value }
               onChange={ this.handleLog }
-              required></textarea>
+              required autoFocus></textarea>
             <i className="fa-regular fa-circle-xmark left" name="cancel" onClick={ showLogModal }></i>
             <button type="submit" className="right confirm"><i className="fa-regular fa-circle-check"></i></button>
           </form>
@@ -67,4 +66,3 @@ export default class Log extends React.Component {
   }
 }
 Log.contextType = AppContext;
-// logModal === true ? this.setState({ logModal: false }) : null

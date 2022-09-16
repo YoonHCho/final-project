@@ -57,7 +57,6 @@ export default class MapComponent extends React.Component {
   nullValue(e) {
     if (e.target.value === '') {
       this.setState({ markerPosition: null, name: null });
-      // this.state.logModal && <Log />;
     }
   }
 
@@ -74,10 +73,15 @@ export default class MapComponent extends React.Component {
   }
 
   render() {
-    const myLatLng = {
-      lat: this.state.userLat,
-      lng: this.state.userLong
-    };
+    let myLatLng;
+    if (this.state.markerPosition) {
+      myLatLng = this.state.markerPosition;
+    } else {
+      myLatLng = {
+        lat: this.state.userLat,
+        lng: this.state.userLong
+      };
+    }
     const { markerPosition, name, logModal } = this.state;
     const { showLogModal, hideLogModal } = this;
     const contextValue = { markerPosition, name, logModal, showLogModal, hideLogModal };
@@ -93,7 +97,7 @@ export default class MapComponent extends React.Component {
             <GoogleMap
               mapContainerStyle={containerStyle}
               center={myLatLng}
-              zoom={12}
+              zoom={10}
               options={options}
             >
               <Autocomplete

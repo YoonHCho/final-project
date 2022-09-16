@@ -1,5 +1,7 @@
 import React from 'react';
 import { GoogleMap, LoadScript, Autocomplete, Marker } from '@react-google-maps/api';
+import Log from './log';
+import AppContext from '../lib/app-context';
 
 const containerStyle = {
   width: '100%',
@@ -19,11 +21,16 @@ export default class MapComponent extends React.Component {
     this.state = {
       userLat: null,
       userLong: null,
-      markerPosition: null
+      markerPosition: null,
+      name: '',
+      logModal: false
     };
     this.autocomplete = null;
     this.onLoad = this.onLoad.bind(this);
     this.onPlaceChanged = this.onPlaceChanged.bind(this);
+    this.nullValue = this.nullValue.bind(this);
+    this.showLogModal = this.showLogModal.bind(this);
+    this.hideLogModal = this.hideLogModal.bind(this);
   }
 
   componentDidMount() {
@@ -36,50 +43,85 @@ export default class MapComponent extends React.Component {
     this.autocomplete = autocomplete;
   }
 
-  onPlaceChanged() {
+  onPlaceChanged(e) {
     if (this.autocomplete !== null) {
       const place = this.autocomplete.getPlace();
       const lat = place.geometry.location.lat();
       const lng = place.geometry.location.lng();
-      this.setState({ markerPosition: { lat, lng } });
+      const name = place.name;
+      this.setState({ markerPosition: { lat, lng }, name });
     }
   }
 
-  render() {
-    const myLatLng = {
-      lat: this.state.userLat,
-      lng: this.state.userLong
-    };
-    return (
-      // process.env.GOOGLE_MAPS_API_KEY, libraries={['places']}
-      <LoadScript
-        googleMapsApiKey={process.env.GOOGLE_MAPS_API_KEY}
-        libraries={libraries}
-      >
+  nullValue(e) {
+    if (e.target.value === '') {
+      this.setState({ markerPosition: null, name: null });
+    }
+  }
 
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={myLatLng}
-          zoom={12}
-          options={options}
-        >
-          <Autocomplete
-            onLoad={this.onLoad}
-            onPlaceChanged={this.onPlaceChanged}
+  showLogModal(e) {
+    if (e.target.name === 'logModal' && !this.state.logModal) {
+      this.setState({ logModal: true });
+    } else if (e.target.getAttribute('name') === 'cancel' && this.state.logModal) {
+      this.setState({ logModal: false });
+    }
+  }
+
+  hideLogModal() {
+    this.setState({ logModal: false });
+  }
+
+  render() {
+    let myLatLng;
+    if (this.state.markerPosition) {
+      myLatLng = this.state.markerPosition;
+    } else {
+      myLatLng = {
+        lat: this.state.userLat,
+        lng: this.state.userLong
+      };
+    }
+    const { markerPosition, name, logModal } = this.state;
+    const { showLogModal, hideLogModal } = this;
+    const contextValue = { markerPosition, name, logModal, showLogModal, hideLogModal };
+    return (
+
+      <AppContext.Provider value={contextValue}>
+        <>
+          <LoadScript
+            googleMapsApiKey={process.env.GOOGLE_MAPS_API_KEY}
+            libraries={libraries}
           >
-            <div>
-              <input
-                type='text'
-                placeholder='Enter a place'
-                className='input-style'
-                autoFocus
-              />
-              <i className="fa-solid fa-magnifying-glass"></i>
-            </div>
-          </Autocomplete>
-          { this.state.markerPosition ? <Marker position={this.state.markerPosition} /> : null}
-        </GoogleMap>
-      </LoadScript>
+
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              center={myLatLng}
+              zoom={10}
+              options={options}
+            >
+              <Autocomplete
+                onLoad={this.onLoad}
+                onPlaceChanged={this.onPlaceChanged}
+              >
+                <div>
+                  <input
+                    type='text'
+                    placeholder='Enter a place'
+                    className='input-style'
+                    value={this.name}
+                    onChange={this.nullValue}
+                    autoFocus
+                  />
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                </div>
+              </Autocomplete>
+              { this.state.markerPosition && <Marker position={this.state.markerPosition} /> }
+            </GoogleMap>
+          </LoadScript>
+          {this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
+          { this.state.logModal && <Log /> }
+        </>
+      </AppContext.Provider>
     );
   }
 }

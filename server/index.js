@@ -30,11 +30,13 @@ app.post('/api/log/', (req, res, next) => {
 
   const { log, location, latitude, longitude } = req.body;
   if (!log) {
-    throw new ClientError(400, 'log is required field');
-  }
-  if (!location || !latitude || !longitude) {
-    res.status(500).json({ error: 'an unexpected error occurred' });
-    return;
+    throw new ClientError(400, 'log is a required field');
+  } else if (!location) {
+    throw new ClientError(400, 'location is a required field');
+  } else if (!latitude) {
+    throw new ClientError(400, 'latitude is a required field');
+  } else if (!longitude) {
+    throw new ClientError(400, 'longitude is a required field');
   }
 
   const params = [log, location, latitude, longitude];

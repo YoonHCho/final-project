@@ -3,7 +3,6 @@ import { GoogleMap, LoadScript, Autocomplete, Marker } from '@react-google-maps/
 import Log from './log';
 import AppContext from '../lib/app-context';
 
-const fakekey = 'dsfdsadf';
 const containerStyle = {
   width: '100%',
   height: '100vh'
@@ -86,11 +85,11 @@ export default class MapComponent extends React.Component {
     const { showLogModal, hideLogModal } = this;
     const contextValue = { markerPosition, name, logModal, showLogModal, hideLogModal };
     return (
-      // process.env.GOOGLE_MAPS_API_KEY, libraries={['places']}    fakekey
+
       <AppContext.Provider value={contextValue}>
         <>
           <LoadScript
-            googleMapsApiKey={fakekey}
+            googleMapsApiKey={process.env.GOOGLE_MAPS_API_KEY}
             libraries={libraries}
           >
 
@@ -116,10 +115,10 @@ export default class MapComponent extends React.Component {
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </div>
               </Autocomplete>
-              { this.state.markerPosition ? <Marker position={this.state.markerPosition} /> : null}
+              { this.state.markerPosition && <Marker position={this.state.markerPosition} /> }
             </GoogleMap>
           </LoadScript>
-          {this.state.name ? <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> : null }
+          {this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
           { this.state.logModal && <Log /> }
         </>
       </AppContext.Provider>

@@ -34,6 +34,7 @@ export default class MapComponent extends React.Component {
     this.showLogModal = this.showLogModal.bind(this);
     this.hideLogModal = this.hideLogModal.bind(this);
     this.addLog = this.addLog.bind(this);
+    // this.getLogInfo = this.getLogInfo.bind(this);
   }
 
   componentDidMount() {
@@ -80,6 +81,27 @@ export default class MapComponent extends React.Component {
       });
   }
 
+  // getLogInfo(logToGet) {
+
+  //   console.log('double clicked');
+  //   // console.log(logToGet);
+  //   // console.log('typeof', typeof logToGet);
+  //   // const index = this.state.logs.findIndex(log => log.logId === logToGet);
+  //   // const log = this.state.logs[index].log;
+
+  //   // console.log('this is the log for the saved place: ', log);
+
+  //   // const option = {
+  //   //   method: 'POST',
+  //   //   headers: {
+  //   //     'Content-Type': 'application/json'
+  //   //   },
+  //   //   body: JSON.stringify(logToGet)
+  //   // };
+
+  //   // this.setState({ showLog: true });
+  // }
+
   nullValue(e) {
     if (e.target.value === '') {
       this.setState({ markerPosition: null, name: null });
@@ -109,14 +131,16 @@ export default class MapComponent extends React.Component {
       };
     }
     const { markerPosition, name, logModal, logs } = this.state;
-    const { showLogModal, hideLogModal } = this;
-    const contextValue = { markerPosition, name, logModal, logs, showLogModal, hideLogModal };
+    const { showLogModal, hideLogModal, getLogInfo } = this;
+    const contextValue = { markerPosition, name, logModal, logs, showLogModal, hideLogModal, getLogInfo };
+    // process.env.GOOGLE_MAPS_API_KEY, libraries={['places']}    fakekey
+    const fakekey = 'rrdf';
 
     return (
       <AppContext.Provider value={contextValue}>
         <>
           <LoadScript
-            googleMapsApiKey={process.env.GOOGLE_MAPS_API_KEY}
+            googleMapsApiKey={fakekey}
             libraries={libraries}
           >
 
@@ -144,12 +168,13 @@ export default class MapComponent extends React.Component {
               </Autocomplete>
               { this.state.markerPosition && <Marker position={this.state.markerPosition} /> }
               { this.state.logs.length > 0 && <LogLists logs={this.state.logs} /> }
+              { this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
+              { this.state.logModal && <Log onSubmit={this.addLog} /> }
             </GoogleMap>
-          { this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
-          { this.state.logModal && <Log onSubmit={ this.addLog } /> }
           </LoadScript>
         </>
       </AppContext.Provider>
     );
   }
 }
+MapComponent.contextType = AppContext;

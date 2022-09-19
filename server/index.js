@@ -32,6 +32,32 @@ app.get('/api/log/', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/log/:id', (req, res, next) => {
+  const id = Number(req.params.id);
+  if (!id) {
+    throw new ClientError(400, 'id must be a positive integer');
+  }
+  const sql = `
+    SELECT "logId",
+           "log",
+           "location",
+           "latitude",
+           "longitude"
+    FROM   "logs"
+    WHERE  "logId" = $1
+  `;
+  const params = [id];
+
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows[0]) {
+        throw new ClientError(404, `cannot find log with logId ${id}`);
+      }
+      res.json(result.rows[0]);
+    })
+    .catch(err => next(err));
+});
+
 app.post('/api/log/', (req, res, next) => {
   const sql = `
   INSERT INTO "logs" ("log", "location", "latitude", "longitude")

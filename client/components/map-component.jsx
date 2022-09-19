@@ -109,8 +109,8 @@ export default class MapComponent extends React.Component {
       };
     }
     const { markerPosition, name, logModal, logs } = this.state;
-    const { showLogModal, hideLogModal } = this;
-    const contextValue = { markerPosition, name, logModal, logs, showLogModal, hideLogModal };
+    const { showLogModal, hideLogModal, getLogInfo } = this;
+    const contextValue = { markerPosition, name, logModal, logs, showLogModal, hideLogModal, getLogInfo };
 
     return (
       <AppContext.Provider value={contextValue}>
@@ -142,14 +142,20 @@ export default class MapComponent extends React.Component {
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </div>
               </Autocomplete>
-              { this.state.markerPosition && <Marker position={this.state.markerPosition} /> }
+              { this.state.markerPosition &&
+                <Marker
+                position={this.state.markerPosition}
+                size={new window.google.maps.Size(18, 22) }
+                anchor={new window.google.maps.Point(12, 14)}
+                /> }
               { this.state.logs.length > 0 && <LogLists logs={this.state.logs} /> }
+              { this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
+              { this.state.logModal && <Log onSubmit={this.addLog} /> }
             </GoogleMap>
-          { this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
-          { this.state.logModal && <Log onSubmit={ this.addLog } /> }
           </LoadScript>
         </>
       </AppContext.Provider>
     );
   }
 }
+MapComponent.contextType = AppContext;

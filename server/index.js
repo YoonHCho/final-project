@@ -59,6 +59,32 @@ app.get('/api/log/:id', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/photos/:logid', (req, res, next) => {
+  const sql = `
+    SELECT "logId"
+           "image"
+    FROM   "photos"
+    WHERE  "logId" = $1
+  `;
+
+  const logId = Number(req.params.logid);
+  if (typeof logId !== 'number' || logId <= 0 || isNaN(logId)) {
+    throw new ClientError(400, 'id must be a positive integer');
+  }
+
+  const params = [logId];
+
+  db.query(sql, params)
+    .then(result => {
+      if (!result.rows) {
+        throw new ClientError(404, `cannot find photo with logId ${logId}`);
+      }
+      res.json(result.rows);
+    })
+    .catch(err => next(err));
+
+});
+
 app.post('/api/log/', (req, res, next) => {
   const sql = `
   INSERT INTO "logs" ("log", "location", "latitude", "longitude")

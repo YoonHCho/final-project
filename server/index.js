@@ -4,6 +4,7 @@ const staticMiddleware = require('./static-middleware');
 const errorMiddleware = require('./error-middleware');
 const pg = require('pg');
 const ClientError = require('./client-error');
+const uploadsMiddleware = require('./uploads-middleware');
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -82,6 +83,31 @@ app.post('/api/log/', (req, res, next) => {
     .then(result => {
       const logCreated = result.rows[0];
       res.status(201).json(logCreated);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/upload/', uploadsMiddleware, (req, res, next) => {
+  const image = `/images/${req.file.filename}`;
+  // console.log(image);
+  const sql = `
+    INSERT INTO "photos" ("logId", "image")
+    VALUES               ($1, $2)
+    RETURNING *;
+  `;
+  const { logId } = req.body;
+
+  if (!logId) {
+    throw new ClientError(400, 'logId is a required field');
+  } else if (!image) {
+    throw new ClientError(400, 'image is a required field');
+  }
+
+  const params = [logId, image];
+  db.query(sql, params)
+    .then(result => {
+      const created = result.rows[0];
+      res.status(201).json(created);
     })
     .catch(err => next(err));
 });

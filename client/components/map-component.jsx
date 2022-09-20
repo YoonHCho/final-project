@@ -3,6 +3,7 @@ import { GoogleMap, LoadScript, Autocomplete, Marker } from '@react-google-maps/
 import Log from './log';
 import AppContext from '../lib/app-context';
 import LogLists from './places';
+import PhotoUpload from './photo-upload';
 
 const containerStyle = {
   width: '100%',
@@ -25,7 +26,9 @@ export default class MapComponent extends React.Component {
       markerPosition: null,
       name: '',
       logModal: false,
-      logs: []
+      logs: [],
+      uploadPhoto: false,
+      selectedId: null
     };
     this.autocomplete = null;
     this.onLoad = this.onLoad.bind(this);
@@ -91,11 +94,19 @@ export default class MapComponent extends React.Component {
       this.setState({ logModal: true });
     } else if (e.target.getAttribute('name') === 'cancel' && this.state.logModal) {
       this.setState({ logModal: false });
+    } else if (e.target.name === 'add-photo') {
+      this.setState({ uploadPhoto: true, selectedId: Number(e.target.attributes.value.value) });
     }
   }
 
   hideLogModal(updateLog) {
-    this.setState({ logModal: false });
+    if (this.state.logModal) {
+      this.setState({ logModal: false });
+    } else if (this.state.uploadPhoto) {
+      this.setState({ uploadPhoto: false });
+    } else if (this.state.selectedId) {
+      this.setState({ selectedId: null });
+    }
   }
 
   render() {
@@ -108,9 +119,9 @@ export default class MapComponent extends React.Component {
         lng: this.state.userLong
       };
     }
-    const { markerPosition, name, logModal, logs } = this.state;
-    const { showLogModal, hideLogModal, getLogInfo } = this;
-    const contextValue = { markerPosition, name, logModal, logs, showLogModal, hideLogModal, getLogInfo };
+    const { markerPosition, name, logModal, logs, selectedId } = this.state;
+    const { showLogModal, hideLogModal, handlePhotoSubmit } = this;
+    const contextValue = { markerPosition, name, logModal, logs, selectedId, showLogModal, hideLogModal, handlePhotoSubmit };
 
     return (
       <AppContext.Provider value={contextValue}>
@@ -151,6 +162,7 @@ export default class MapComponent extends React.Component {
               { this.state.logs.length > 0 && <LogLists logs={this.state.logs} /> }
               { this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
               { this.state.logModal && <Log onSubmit={this.addLog} /> }
+              { this.state.uploadPhoto && <PhotoUpload onSubmit={this.handlePhotoSubmit} /> }
             </GoogleMap>
           </LoadScript>
         </>

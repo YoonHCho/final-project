@@ -11,6 +11,7 @@ class Log extends React.Component {
   }
 
   render() {
+    const { showLogModal } = this.context;
     let { logId, log, lat, lng, location } = this.props;
     lat = Number(lat);
     lng = Number(lng);
@@ -42,6 +43,7 @@ class Log extends React.Component {
               <div>
                 <h3>{location}</h3>
                 <p>{log}</p>
+                <button value={logId} onClick={ showLogModal } name="add-photo" className="add-photo">Add Photo</button>
               </div>
             </InfoWindow>
           }

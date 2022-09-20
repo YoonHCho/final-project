@@ -111,6 +111,71 @@ i:hover {
 
 /* END OF LOG MODAL */
 
+/* FOR PHOTO RELATED */
+.add-photo {
+  background-color: #17a2b8;
+  color: white;
+  width: 125px;
+  height: 35px;
+  border: none;
+  border-radius: 3px;
+}
+
+.photo-container {
+  background-color: white;
+  box-sizing: border-box;
+  border: 1px solid gray;
+  border-radius: 5px;
+  outline: none;
+  resize: none;
+  width: 250px;
+  height: 20%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.choose {
+  margin: auto;
+}
+
+.upload-btn {
+  background-color: #17a2b8;
+  color: white;
+  width: 125px;
+  height: 35px;
+  border: none;
+  border-radius: 3px;
+  font-size: large;
+}
+
+.cancel-btn {
+  background-color: #f00;
+  color: white;
+  width: 125px;
+  height: 35px;
+  border: none;
+  border-radius: 3px;
+  font-size: large;
+}
+
+.btn-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.file-input {
+  padding-left: 25px;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+/* END OF PHOTO RELATED */
+
 @media only screen and (min-width: 520px) {
   .save {
     right: 10%;

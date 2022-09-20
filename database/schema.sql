@@ -7,13 +7,13 @@ drop schema "public" cascade;
 create schema "public";
 
 CREATE TABLE "public"."logs" (
-	"logId" serial NOT NULL,
-	"log" TEXT NOT NULL,
-	"location" TEXT NOT NULL,
-	"latitude" DECIMAL NOT NULL,
+	"logId"     serial NOT NULL,
+	"log"       TEXT NOT NULL,
+	"location"  TEXT NOT NULL,
+	"latitude"  DECIMAL NOT NULL,
 	"longitude" DECIMAL NOT NULL,
 	"createdAt" timestamptz(6) NOT NULL default now(),
-	CONSTRAINT "logs_pk" PRIMARY KEY ("logId")
+	CONSTRAINT  "logs_pk" PRIMARY KEY ("logId")
 ) WITH (
   OIDS=FALSE
 );
@@ -21,9 +21,9 @@ CREATE TABLE "public"."logs" (
 
 
 CREATE TABLE "public"."photos" (
-	"photoId" serial NOT NULL,
-	"logId" int NOT NULL,
-	"images" TEXT NOT NULL,
+	"photoId"   serial NOT NULL,
+	"logId"     int NOT NULL,
+	"image"    TEXT NOT NULL,
 	"createdAt" timestamptz(6) NOT NULL default now(),
 	CONSTRAINT "photos_pk" PRIMARY KEY ("photoId")
 ) WITH (

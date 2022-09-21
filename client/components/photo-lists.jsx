@@ -23,7 +23,7 @@ export default class ViewPhotos extends React.Component {
     if (this.state.isWaiting) {
       return null;
     }
-    if (Object.keys(this.state.photos).length > 0) {
+    if (this.state.photos.length > 0) {
       return (
         <>
           <div className="overlay"></div>
@@ -48,7 +48,7 @@ export default class ViewPhotos extends React.Component {
       );
     }
 
-    if (Object.keys(this.state.photos).length <= 0) {
+    if (this.state.photos.length <= 0) {
       return (
         <>
           <div className="overlay"></div>

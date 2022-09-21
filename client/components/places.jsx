@@ -6,12 +6,12 @@ class Log extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: false
+      selected: null
     };
   }
 
   render() {
-    const { showLogModal } = this.context;
+    const { showLogModal, resetCoord } = this.context;
     let { logId, log, lat, lng, location } = this.props;
     lat = Number(lat);
     lng = Number(lng);
@@ -29,6 +29,7 @@ class Log extends React.Component {
             anchor: new window.google.maps.Point(20, 40)
           }}
           onClick={() => {
+            resetCoord(lat, lng);
             this.setState({ selected: logId });
           }}
         >
@@ -43,7 +44,10 @@ class Log extends React.Component {
               <div>
                 <h3>{location}</h3>
                 <p>{log}</p>
-                <button value={logId} onClick={ showLogModal } name="add-photo" className="add-photo">Add Photo</button>
+                <div className="flex-just-cent">
+                  <button value={logId} onClick={ showLogModal } name="add-photo" className="add-photo">Add Photo</button>
+                  <button value={logId} onClick={ showLogModal } name="view-photos" className="view-pht-btn" >View Photo</button>
+                </div>
               </div>
             </InfoWindow>
           }

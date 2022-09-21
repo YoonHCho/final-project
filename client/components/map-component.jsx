@@ -39,6 +39,7 @@ export default class MapComponent extends React.Component {
     this.showLogModal = this.showLogModal.bind(this);
     this.hideLogModal = this.hideLogModal.bind(this);
     this.addLog = this.addLog.bind(this);
+    this.resetCoord = this.resetCoord.bind(this);
   }
 
   componentDidMount() {
@@ -103,9 +104,13 @@ export default class MapComponent extends React.Component {
     }
   }
 
+  resetCoord(lat, lng) {
+    this.setState({ userLat: lat, userLong: lng });
+  }
+
   hideLogModal(updateLog) {
     if (this.state.logModal) {
-      this.setState({ logModal: false });
+      this.setState({ logModal: false, markerPosition: null });
     }
     if (this.state.uploadPhoto) {
       this.setState({ uploadPhoto: false });
@@ -129,8 +134,8 @@ export default class MapComponent extends React.Component {
       };
     }
     const { markerPosition, name, logModal, logs, selectedId } = this.state;
-    const { showLogModal, hideLogModal, handlePhotoSubmit } = this;
-    const contextValue = { markerPosition, name, logModal, logs, selectedId, showLogModal, hideLogModal, handlePhotoSubmit };
+    const { showLogModal, hideLogModal, resetCoord } = this;
+    const contextValue = { markerPosition, name, logModal, logs, selectedId, showLogModal, hideLogModal, resetCoord };
 
     return (
       <AppContext.Provider value={contextValue}>
@@ -171,7 +176,7 @@ export default class MapComponent extends React.Component {
               { this.state.logs.length > 0 && <LogLists logs={this.state.logs} /> }
               { this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
               { this.state.logModal && <Log onSubmit={this.addLog} /> }
-              { this.state.uploadPhoto && <PhotoUpload onSubmit={this.handlePhotoSubmit} /> }
+              { this.state.uploadPhoto && <PhotoUpload /> }
               { this.state.viewPhotos && <ViewPhotos /> }
             </GoogleMap>
           </LoadScript>

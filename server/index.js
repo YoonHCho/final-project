@@ -67,17 +67,18 @@ app.get('/api/photos/:logid', (req, res, next) => {
   `;
 
   const logId = Number(req.params.logid);
-  if (typeof logId !== 'number' || logId <= 0 || isNaN(logId)) {
-    throw new ClientError(400, 'id must be a positive integer');
-  }
+  // if (typeof logId !== 'number' || logId <= 0 || isNaN(logId)) {
+  //   return [];
+  //   // throw new ClientError(400, 'id must be a positive integer');
+  // }   RETURN AN EMPTY ARRAY?
 
   const params = [logId];
 
   db.query(sql, params)
     .then(result => {
-      if (!result.rows[0]) {
-        throw new ClientError(404, `cannot find photo with logId ${logId}`);
-      }
+      // if (!result.rows[0]) {
+      //   throw new ClientError(404, `cannot find photo with logId ${logId}`);
+      // }   RETURN AN EMPTY ARRAY ?
       res.json(result.rows);
     })
     .catch(err => next(err));

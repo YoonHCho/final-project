@@ -207,6 +207,8 @@ button:hover {
   flex-wrap: wrap;
   overflow: scroll;
   justify-content: center;
+
+  /* change overflow to auto? */
 }
 
 img {

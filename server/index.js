@@ -67,18 +67,18 @@ app.get('/api/photos/:logid', (req, res, next) => {
   `;
 
   const logId = Number(req.params.logid);
-  // if (typeof logId !== 'number' || logId <= 0 || isNaN(logId)) {
-  //   return [];
-  //   // throw new ClientError(400, 'id must be a positive integer');
-  // }   RETURN AN EMPTY ARRAY?
+  if (typeof logId !== 'number' || logId <= 0 || isNaN(logId)) {
+    throw new ClientError(400, 'id must be a positive integer');
+  }
 
   const params = [logId];
 
   db.query(sql, params)
     .then(result => {
-      // if (!result.rows[0]) {
-      //   throw new ClientError(404, `cannot find photo with logId ${logId}`);
-      // }   RETURN AN EMPTY ARRAY ?
+      if (!result.rows[0]) {
+        res.json(result.rows);
+        return;
+      }
       res.json(result.rows);
     })
     .catch(err => next(err));
@@ -114,7 +114,6 @@ app.post('/api/log/', (req, res, next) => {
 
 app.post('/api/upload/', uploadsMiddleware, (req, res, next) => {
   const image = `/images/${req.file.filename}`;
-  // console.log(image);
   const sql = `
     INSERT INTO "photos" ("logId", "image")
     VALUES               ($1, $2)

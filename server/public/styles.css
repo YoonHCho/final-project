@@ -24,7 +24,6 @@
   right: 20%;
 }
 
-/* FOR LOG MODAL */
 .container {
   background-color: white;
   box-sizing: border-box;
@@ -109,9 +108,6 @@ i:hover {
   display: inherit;
 }
 
-/* END OF LOG MODAL */
-
-/* FOR PHOTO RELATED */
 .add-photo {
   background-color: #17a2b8;
   color: white;
@@ -205,10 +201,8 @@ button:hover {
   transform: translate(-50%, -50%);
   display: flex;
   flex-wrap: wrap;
-  overflow: scroll;
+  overflow: auto;
   justify-content: center;
-
-  /* change overflow to auto? */
 }
 
 img {
@@ -248,7 +242,7 @@ img {
   border-radius: 5px;
   outline: none;
   resize: none;
-  width: 25%;
+  width: 240px;
   max-height: 95%;
   position: absolute;
   top: 50%;
@@ -258,8 +252,6 @@ img {
   flex-wrap: wrap;
   justify-content: center;
 }
-
-/* END OF PHOTO RELATED */
 
 @media only screen and (min-width: 520px) {
   .save {

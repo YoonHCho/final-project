@@ -43,7 +43,10 @@ class Log extends React.Component {
               <div>
                 <h3>{location}</h3>
                 <p>{log}</p>
-                <button value={logId} onClick={ showLogModal } name="add-photo" className="add-photo">Add Photo</button>
+                <div className="flex-just-cent">
+                  <button value={logId} onClick={ showLogModal } name="add-photo" className="add-photo">Add Photo</button>
+                  <button value={logId} onClick={ showLogModal } name="view-photos" className="view-pht-btn" >View Photo</button>
+                </div>
               </div>
             </InfoWindow>
           }

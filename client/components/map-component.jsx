@@ -4,6 +4,7 @@ import Log from './log';
 import AppContext from '../lib/app-context';
 import LogLists from './places';
 import PhotoUpload from './photo-upload';
+import ViewPhotos from './photo-lists';
 
 const containerStyle = {
   width: '100%',
@@ -28,7 +29,8 @@ export default class MapComponent extends React.Component {
       logModal: false,
       logs: [],
       uploadPhoto: false,
-      selectedId: null
+      selectedId: null,
+      viewPhotos: false
     };
     this.autocomplete = null;
     this.onLoad = this.onLoad.bind(this);
@@ -96,16 +98,23 @@ export default class MapComponent extends React.Component {
       this.setState({ logModal: false });
     } else if (e.target.name === 'add-photo') {
       this.setState({ uploadPhoto: true, selectedId: Number(e.target.attributes.value.value) });
+    } else if (e.target.name === 'view-photos') {
+      this.setState({ viewPhotos: true, selectedId: Number(e.target.attributes.value.value) });
     }
   }
 
   hideLogModal(updateLog) {
     if (this.state.logModal) {
       this.setState({ logModal: false });
-    } else if (this.state.uploadPhoto) {
+    }
+    if (this.state.uploadPhoto) {
       this.setState({ uploadPhoto: false });
-    } else if (this.state.selectedId) {
+    }
+    if (this.state.selectedId) {
       this.setState({ selectedId: null });
+    }
+    if (this.state.viewPhotos) {
+      this.setState({ viewPhotos: false });
     }
   }
 
@@ -163,6 +172,7 @@ export default class MapComponent extends React.Component {
               { this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
               { this.state.logModal && <Log onSubmit={this.addLog} /> }
               { this.state.uploadPhoto && <PhotoUpload onSubmit={this.handlePhotoSubmit} /> }
+              { this.state.viewPhotos && <ViewPhotos /> }
             </GoogleMap>
           </LoadScript>
         </>

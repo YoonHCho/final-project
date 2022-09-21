@@ -61,8 +61,7 @@ app.get('/api/log/:id', (req, res, next) => {
 
 app.get('/api/photos/:logid', (req, res, next) => {
   const sql = `
-    SELECT "logId"
-           "image"
+    SELECT "image"
     FROM   "photos"
     WHERE  "logId" = $1
   `;
@@ -76,13 +75,12 @@ app.get('/api/photos/:logid', (req, res, next) => {
 
   db.query(sql, params)
     .then(result => {
-      if (!result.rows) {
+      if (!result.rows[0]) {
         throw new ClientError(404, `cannot find photo with logId ${logId}`);
       }
       res.json(result.rows);
     })
     .catch(err => next(err));
-
 });
 
 app.post('/api/log/', (req, res, next) => {

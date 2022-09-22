@@ -126,7 +126,7 @@ export default class MapComponent extends React.Component {
     this.setState({ userLat: lat, userLong: lng });
   }
 
-  hideLogModal(updateLog) {
+  hideLogModal() {
     if (this.state.logModal) {
       this.setState({ logModal: false, markerPosition: null });
     }
@@ -147,7 +147,7 @@ export default class MapComponent extends React.Component {
   renderPage() {
 
     const { path } = this.state.route;
-    if (path === '') {
+    if (path === 'sign-up') {
       return <AuthForm />;
     }
 
@@ -197,7 +197,8 @@ export default class MapComponent extends React.Component {
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </div>
               </Autocomplete>
-              <img src='/images/2037710.png' className='sign' onClick={showLogModal} ></img>
+              <a href="#sign-up"><img src='/images/2037710.png' className='sign' onClick={showLogModal}></img></a>
+              {/* {onClick = { showLogModal }} */}
               {/* { this.state.signUp && <img src='/images/2037710.png' className='sign' onClick={showLogModal}></img> } */}
               { this.state.markerPosition &&
                 <Marker

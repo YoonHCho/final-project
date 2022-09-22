@@ -24,6 +24,18 @@
   right: 20%;
 }
 
+.sign {
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  bottom: 17px;
+  left: 5px;
+}
+
+.sign:hover {
+  cursor: pointer;
+}
+
 .container {
   background-color: white;
   box-sizing: border-box;
@@ -251,6 +263,53 @@ img {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+/********** FOR SIGN UP ************/
+.sign-up-header {
+  font-family: Inter, sans-serif;
+  margin-bottom: 0;
+}
+
+.sign-up-para {
+  font-family: Inter, sans-serif;
+  font-size: x-small;
+  margin-bottom: 0;
+}
+
+.sign-up-input {
+  width: 205px;
+  height: 38px;
+  padding-left: 10px;
+  font-family: Inter, sans-serif;
+  margin: 7px;
+}
+
+.register-btn {
+  background-color: #17a2b8;
+  color: white;
+  width: 85px;
+  height: 35px;
+  border: none;
+  border-radius: 3px;
+  font-size: large;
+}
+
+.reg-cancel-btn {
+  background-color: #f00;
+  color: white;
+  width: 85px;
+  height: 35px;
+  border: none;
+  border-radius: 3px;
+  font-size: large;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  padding: 5px 6px 0;
 }
 
 @media only screen and (min-width: 520px) {

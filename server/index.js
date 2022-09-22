@@ -1,4 +1,6 @@
 require('dotenv/config');
+// const path = require('path');
+const argon2 = require('argon2');
 const express = require('express');
 const staticMiddleware = require('./static-middleware');
 const errorMiddleware = require('./error-middleware');
@@ -14,6 +16,13 @@ const db = new pg.Pool({
 });
 
 const app = express();
+
+// started for feature 7 user can sign up
+// const publicPath = path.join(__dirname, 'public');
+// if (process.env.NODE_ENV === 'development') {
+//   app.use(require('./dev-middleware')(publicPath));
+// }
+
 app.use(express.json());
 
 app.use(staticMiddleware);
@@ -132,6 +141,29 @@ app.post('/api/upload/', uploadsMiddleware, (req, res, next) => {
     .then(result => {
       const created = result.rows[0];
       res.status(201).json(created);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/auth/sign-up', (req, res, next) => {
+  const { username, email, password } = req.body;
+  if (!username || !email || !password) {
+    throw new ClientError(400, 'username, email, and password are required fields');
+  }
+  argon2
+    .hash(password)
+    .then(hashedPassword => {
+      const sql = `
+        INSERT INTO "users" ("username", "email", "hashedPassword")
+        VALUES              ($1, $2, $3)
+        RETURNING "userId", "username", "email", "joinedAt"
+      `;
+      const params = [username, email, hashedPassword];
+      return db.query(sql, params);
+    })
+    .then(result => {
+      const [user] = result.rows;
+      res.status(201).json(user);
     })
     .catch(err => next(err));
 });

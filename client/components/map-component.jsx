@@ -26,6 +26,7 @@ export default class MapComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      firstLoad: true,
       user: false,
       userLat: null,
       userLong: null,
@@ -53,7 +54,7 @@ export default class MapComponent extends React.Component {
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(userCoords => {
-      this.setState({ userLat: userCoords.coords.latitude, userLong: userCoords.coords.longitude });
+      this.setState({ userLat: userCoords.coords.latitude, userLong: userCoords.coords.longitude, firstLoad: false });
     });
 
     fetch('/api/log/')
@@ -147,7 +148,7 @@ export default class MapComponent extends React.Component {
   renderPage() {
 
     const { path } = this.state.route;
-    if (path === 'sign-up') {
+    if (path === 'sign-up' || path === 'sign-in') {
       return <AuthForm />;
     }
 
@@ -163,6 +164,7 @@ export default class MapComponent extends React.Component {
         lng: this.state.userLong
       };
     }
+    if (this.state.firstLoad) return null;
     const { markerPosition, name, logModal, logs, selectedId, route } = this.state;
     const { showLogModal, hideLogModal, resetCoord } = this;
     const contextValue = { markerPosition, name, logModal, logs, selectedId, route, showLogModal, hideLogModal, resetCoord };

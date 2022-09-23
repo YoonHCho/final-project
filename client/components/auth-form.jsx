@@ -33,7 +33,6 @@ export default class AuthForm extends React.Component {
     fetch(`/api/auth/${action}`, option)
       .then(res => res.json())
       .catch(err => {
-        this.setState({ username: '', email: '', password: '' });
         console.error(err);
       });
     this.setState({ username: '', email: '', password: '' });

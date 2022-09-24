@@ -75,7 +75,7 @@ export default class AuthForm extends React.Component {
             </div>
           </div> }
         <h4 className='sign-up-header'>{upOrIn}</h4>
-        <p className='sign-up-para'>{signPara}</p>
+        <p className='sign-up-header sign-up-para'>{signPara}</p>
         <hr />
         <form onSubmit={this.handleRegister}>
           <label htmlFor="username">

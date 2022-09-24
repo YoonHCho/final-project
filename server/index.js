@@ -6,6 +6,7 @@ const staticMiddleware = require('./static-middleware');
 const errorMiddleware = require('./error-middleware');
 const pg = require('pg');
 const ClientError = require('./client-error');
+const UsernameError = require('./username-error');
 const uploadsMiddleware = require('./uploads-middleware');
 
 const db = new pg.Pool({
@@ -146,22 +147,27 @@ app.post('/api/upload/', uploadsMiddleware, (req, res, next) => {
 });
 
 app.post('/api/auth/sign-up', (req, res, next) => {
-  const { username, email, password } = req.body;
-  if (!username || !email || !password) {
-    throw new ClientError(400, 'username, email, and password are required fields');
+  const { username, password } = req.body;
+  if (!username || !password) {
+    throw new ClientError(400, 'username and password are required fields');
   }
   argon2
     .hash(password)
     .then(hashedPassword => {
       const sql = `
-        INSERT INTO "users" ("username", "email", "hashedPassword")
-        VALUES              ($1, $2, $3)
-        RETURNING "userId", "username", "email", "joinedAt"
+        INSERT INTO "users" ("username", "hashedPassword")
+        VALUES              ($1, $2)
+        ON CONFLICT         ("username") DO NOTHING
+        RETURNING "userId", "username", "joinedAt"
       `;
-      const params = [username, email, hashedPassword];
+
+      const params = [username, hashedPassword];
       return db.query(sql, params);
     })
     .then(result => {
+      if (result.rows.length === 0) {
+        throw new UsernameError(409, 'username is already taken');
+      }
       const [user] = result.rows;
       res.status(201).json(user);
     })

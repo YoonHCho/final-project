@@ -37,7 +37,6 @@ CREATE TABLE "public"."photos" (
 CREATE TABLE "public"."users" (
 	"userId" serial NOT NULL,
 	"username" TEXT NOT NULL UNIQUE,
-	"email" TEXT NOT NULL UNIQUE,
 	"hashedPassword" TEXT NOT NULL,
 	"joinedAt" timestamptz(6) NOT NULL default now(),
 	CONSTRAINT "users_pk" PRIMARY KEY ("userId")
@@ -51,6 +50,11 @@ ALTER TABLE "logs" ADD CONSTRAINT "logs_fk0" FOREIGN KEY ("userId") REFERENCES "
 
 ALTER TABLE "photos" ADD CONSTRAINT "photos_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
 ALTER TABLE "photos" ADD CONSTRAINT "photos_fk1" FOREIGN KEY ("logId") REFERENCES "logs"("logId");
+
+
+
+
+
 
 
 

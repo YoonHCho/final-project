@@ -200,8 +200,6 @@ export default class MapComponent extends React.Component {
                 </div>
               </Autocomplete>
               <a href="#sign-up"><img src='/images/2037710.png' className='sign' onClick={showLogModal}></img></a>
-              {/* {onClick = { showLogModal }} */}
-              {/* { this.state.signUp && <img src='/images/2037710.png' className='sign' onClick={showLogModal}></img> } */}
               { this.state.markerPosition &&
                 <Marker
                 position={this.state.markerPosition}

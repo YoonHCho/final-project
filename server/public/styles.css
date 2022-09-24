@@ -1,3 +1,7 @@
+* {
+  font-family: Inter, sans-serif;
+}
+
 .input-style {
   position: absolute;
   display: block;
@@ -271,8 +275,8 @@ img {
 
 .duplicate {
   background-color: black;
-  width: 175px;
-  height: 65px;
+  width: 210px;
+  height: 60px;
   color: white;
 }
 
@@ -285,14 +289,11 @@ img {
 }
 
 .sign-up-header {
-  font-family: Inter, sans-serif;
   margin-bottom: 0;
 }
 
 .sign-up-para {
-  font-family: Inter, sans-serif;
   font-size: x-small;
-  margin-bottom: 0;
 }
 
 .sign-up-input {

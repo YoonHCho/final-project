@@ -68,7 +68,7 @@ export default class AuthForm extends React.Component {
     return (
       <>
         { this.state.duplicate &&
-          <div className='duplicate' >
+          <div className='no-photo-container duplicate' >
             Username is already taken
             <div className='btn-center pad-top'>
               <button onClick={this.removeDup}>CANCEL</button>

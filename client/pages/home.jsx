@@ -1,9 +1,9 @@
-// import React from 'react';
-// // import MapComponent from '../components/map-component';
+import React from 'react';
+import MapComponent from '../components/map-component';
 
-// export default function Home(props) {
+export default function Home(props) {
 
-//   return (
-//     // <MapComponent />
-//   );
-// }
+  return (
+    <MapComponent />
+  );
+}

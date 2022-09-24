@@ -13,7 +13,7 @@ export default function PageContainer({ children }) {
     <>
       <div className='overlay'></div>
       <div className="bg-light">
-        <div className="sign-up-container" style={styles.page}>
+        <div className="no-photo-container sign-up-container" style={styles.page}>
           {children}
         </div>
       </div>

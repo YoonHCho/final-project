@@ -1,5 +1,4 @@
 export default function parseRoute(hashRoute) {
-  // console.log('hashRoute: ', hashRoute);
   if (hashRoute.startsWith('#')) {
     hashRoute = hashRoute.replace('#', '');
   }

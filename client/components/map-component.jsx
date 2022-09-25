@@ -6,6 +6,10 @@ import LogLists from './places';
 import PhotoUpload from './photo-upload';
 import ViewPhotos from './photo-lists';
 
+import PageContainer from './page-container';
+import parseRoute from '../lib/parse-route';
+import AuthForm from './auth-form';
+
 const containerStyle = {
   width: '100%',
   height: '100vh'
@@ -22,6 +26,8 @@ export default class MapComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      firstLoad: true,
+      user: false,
       userLat: null,
       userLong: null,
       markerPosition: null,
@@ -30,7 +36,9 @@ export default class MapComponent extends React.Component {
       logs: [],
       uploadPhoto: false,
       selectedId: null,
-      viewPhotos: false
+      viewPhotos: false,
+      signUp: false,
+      route: parseRoute(window.location.hash)
     };
     this.autocomplete = null;
     this.onLoad = this.onLoad.bind(this);
@@ -40,16 +48,25 @@ export default class MapComponent extends React.Component {
     this.hideLogModal = this.hideLogModal.bind(this);
     this.addLog = this.addLog.bind(this);
     this.resetCoord = this.resetCoord.bind(this);
+
+    this.renderPage = this.renderPage.bind(this);
   }
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(userCoords => {
-      this.setState({ userLat: userCoords.coords.latitude, userLong: userCoords.coords.longitude });
+      this.setState({ userLat: userCoords.coords.latitude, userLong: userCoords.coords.longitude, firstLoad: false });
     });
 
     fetch('/api/log/')
       .then(result => result.json())
       .then(logs => this.setState({ logs }));
+
+    window.addEventListener('hashchange', () => {
+      this.setState({
+        route: parseRoute(window.location.hash)
+      });
+    });
+
   }
 
   onLoad(autocomplete) {
@@ -101,6 +118,8 @@ export default class MapComponent extends React.Component {
       this.setState({ uploadPhoto: true, selectedId: Number(e.target.attributes.value.value) });
     } else if (e.target.name === 'view-photos') {
       this.setState({ viewPhotos: true, selectedId: Number(e.target.attributes.value.value) });
+    } else if (e.target.className === 'sign') {
+      this.setState({ signUp: true });
     }
   }
 
@@ -108,7 +127,7 @@ export default class MapComponent extends React.Component {
     this.setState({ userLat: lat, userLong: lng });
   }
 
-  hideLogModal(updateLog) {
+  hideLogModal() {
     if (this.state.logModal) {
       this.setState({ logModal: false, markerPosition: null });
     }
@@ -121,6 +140,18 @@ export default class MapComponent extends React.Component {
     if (this.state.viewPhotos) {
       this.setState({ viewPhotos: false });
     }
+    if (this.state.signUp) {
+      this.setState({ signUp: false });
+    }
+  }
+
+  renderPage() {
+
+    const { path } = this.state.route;
+    if (path === 'sign-up' || path === 'sign-in') {
+      return <AuthForm />;
+    }
+
   }
 
   render() {
@@ -133,9 +164,10 @@ export default class MapComponent extends React.Component {
         lng: this.state.userLong
       };
     }
-    const { markerPosition, name, logModal, logs, selectedId } = this.state;
+    if (this.state.firstLoad) return null;
+    const { markerPosition, name, logModal, logs, selectedId, route } = this.state;
     const { showLogModal, hideLogModal, resetCoord } = this;
-    const contextValue = { markerPosition, name, logModal, logs, selectedId, showLogModal, hideLogModal, resetCoord };
+    const contextValue = { markerPosition, name, logModal, logs, selectedId, route, showLogModal, hideLogModal, resetCoord };
 
     return (
       <AppContext.Provider value={contextValue}>
@@ -167,6 +199,7 @@ export default class MapComponent extends React.Component {
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </div>
               </Autocomplete>
+              <a href="#sign-up"><img src='/images/2037710.png' className='sign' onClick={showLogModal}></img></a>
               { this.state.markerPosition &&
                 <Marker
                 position={this.state.markerPosition}
@@ -178,6 +211,14 @@ export default class MapComponent extends React.Component {
               { this.state.logModal && <Log onSubmit={this.addLog} /> }
               { this.state.uploadPhoto && <PhotoUpload /> }
               { this.state.viewPhotos && <ViewPhotos /> }
+              { this.state.signUp &&
+                <PageContainer
+                  key={route.path}
+                  action={route.path}
+                >
+                  { this.renderPage() }
+                </PageContainer>
+              }
             </GoogleMap>
           </LoadScript>
         </>

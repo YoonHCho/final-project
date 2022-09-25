@@ -1,9 +1,12 @@
 require('dotenv/config');
+// const path = require('path');
+const argon2 = require('argon2');
 const express = require('express');
 const staticMiddleware = require('./static-middleware');
 const errorMiddleware = require('./error-middleware');
 const pg = require('pg');
 const ClientError = require('./client-error');
+const UsernameError = require('./username-error');
 const uploadsMiddleware = require('./uploads-middleware');
 
 const db = new pg.Pool({
@@ -14,6 +17,13 @@ const db = new pg.Pool({
 });
 
 const app = express();
+
+// started for feature 7 user can sign up
+// const publicPath = path.join(__dirname, 'public');
+// if (process.env.NODE_ENV === 'development') {
+//   app.use(require('./dev-middleware')(publicPath));
+// }
+
 app.use(express.json());
 
 app.use(staticMiddleware);
@@ -132,6 +142,34 @@ app.post('/api/upload/', uploadsMiddleware, (req, res, next) => {
     .then(result => {
       const created = result.rows[0];
       res.status(201).json(created);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/auth/sign-up', (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    throw new ClientError(400, 'username and password are required fields');
+  }
+  argon2
+    .hash(password)
+    .then(hashedPassword => {
+      const sql = `
+        INSERT INTO "users" ("username", "hashedPassword")
+        VALUES              ($1, $2)
+        ON CONFLICT         ("username") DO NOTHING
+        RETURNING "userId", "username", "joinedAt"
+      `;
+
+      const params = [username, hashedPassword];
+      return db.query(sql, params);
+    })
+    .then(result => {
+      if (result.rows.length === 0) {
+        throw new UsernameError(409, 'username is already taken');
+      }
+      const [user] = result.rows;
+      res.status(201).json(user);
     })
     .catch(err => next(err));
 });

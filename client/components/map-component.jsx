@@ -129,7 +129,7 @@ export default class MapComponent extends React.Component {
 
   hideLogModal() {
     if (this.state.logModal) {
-      this.setState({ logModal: false, markerPosition: null });
+      this.setState({ logModal: false, markerPosition: null, name: '' });
     }
     if (this.state.uploadPhoto) {
       this.setState({ uploadPhoto: false });
@@ -180,7 +180,7 @@ export default class MapComponent extends React.Component {
             <GoogleMap
               mapContainerStyle={containerStyle}
               center={myLatLng}
-              zoom={10}
+              zoom={9}
               options={options}
             >
               <Autocomplete
@@ -190,7 +190,7 @@ export default class MapComponent extends React.Component {
                 <div>
                   <input
                     type='text'
-                    placeholder='Enter a place'
+                    placeholder='Enter a place &amp; select one'
                     className='input-style'
                     value={this.name}
                     onChange={this.nullValue}

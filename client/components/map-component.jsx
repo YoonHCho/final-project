@@ -10,6 +10,7 @@ import PageContainer from './page-container';
 import parseRoute from '../lib/parse-route';
 import AuthForm from './auth-form';
 
+// to be used for <GoogleMap> comp
 const containerStyle = {
   width: '100%',
   height: '100vh'
@@ -20,18 +21,21 @@ const options = {
   zoomControl: true
 };
 
+// to be used for <LoadScript> comp
 const libraries = ['places'];
 
 export default class MapComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      // will need following states
       firstLoad: true,
-      user: false,
       userLat: null,
       userLong: null,
       markerPosition: null,
       name: '',
+
+      user: false,
       logModal: false,
       logs: [],
       uploadPhoto: false,
@@ -41,9 +45,11 @@ export default class MapComponent extends React.Component {
       route: parseRoute(window.location.hash)
     };
     this.autocomplete = null;
+    // binding is necessary to make 'this' work in callback.
     this.onLoad = this.onLoad.bind(this);
     this.onPlaceChanged = this.onPlaceChanged.bind(this);
     this.nullValue = this.nullValue.bind(this);
+
     this.showLogModal = this.showLogModal.bind(this);
     this.hideLogModal = this.hideLogModal.bind(this);
     this.addLog = this.addLog.bind(this);
@@ -52,11 +58,14 @@ export default class MapComponent extends React.Component {
     this.renderPage = this.renderPage.bind(this);
   }
 
+  // after the first render
   componentDidMount() {
+    // geolocation JS API, with getCurrentPosition method, sets my current location, access to coords property
     navigator.geolocation.getCurrentPosition(userCoords => {
       this.setState({ userLat: userCoords.coords.latitude, userLong: userCoords.coords.longitude, firstLoad: false });
     });
 
+    // below not needed for presentation feature
     fetch('/api/log/')
       .then(result => result.json())
       .then(logs => this.setState({ logs }));
@@ -74,6 +83,7 @@ export default class MapComponent extends React.Component {
   }
 
   onPlaceChanged(e) {
+    // present line 117 first.    when not null and when one of the places is selected. back to line 212 for marker
     if (this.autocomplete !== null) {
       const place = this.autocomplete.getPlace();
       const lat = place.geometry.location.lat();
@@ -103,6 +113,7 @@ export default class MapComponent extends React.Component {
       });
   }
 
+  // when the input is empty, map will center back to user's location - line 171
   nullValue(e) {
     if (e.target.value === '') {
       this.setState({ markerPosition: null, name: null });
@@ -146,15 +157,14 @@ export default class MapComponent extends React.Component {
   }
 
   renderPage() {
-
     const { path } = this.state.route;
     if (path === 'sign-up' || path === 'sign-in') {
       return <AuthForm />;
     }
-
   }
 
   render() {
+    if (this.state.firstLoad) return null;
     let myLatLng;
     if (this.state.markerPosition) {
       myLatLng = this.state.markerPosition;
@@ -164,7 +174,7 @@ export default class MapComponent extends React.Component {
         lng: this.state.userLong
       };
     }
-    if (this.state.firstLoad) return null;
+
     const { markerPosition, name, logModal, logs, selectedId, route } = this.state;
     const { showLogModal, hideLogModal, resetCoord } = this;
     const contextValue = { markerPosition, name, logModal, logs, selectedId, route, showLogModal, hideLogModal, resetCoord };
@@ -172,11 +182,13 @@ export default class MapComponent extends React.Component {
     return (
       <AppContext.Provider value={contextValue}>
         <>
+        {/* need LoadScript component order to show the GoogleMap, props key and libraries */}
           <LoadScript
             googleMapsApiKey={process.env.GOOGLE_MAPS_API_KEY}
             libraries={libraries}
           >
 
+            {/* variables from line 13 */}
             <GoogleMap
               mapContainerStyle={containerStyle}
               center={myLatLng}
@@ -184,28 +196,30 @@ export default class MapComponent extends React.Component {
               options={options}
             >
               <Autocomplete
+              // onLoad, this callback is called when the autocomplete instance has loaded need for autocomplete to work
                 onLoad={this.onLoad}
                 onPlaceChanged={this.onPlaceChanged}
               >
                 <div>
+                  {/* when input changes, onPlaceChanged from above is called, method in line 85 */}
                   <input
                     type='text'
                     placeholder='Enter a place &amp; select one'
                     className='input-style'
-                    value={this.name}
-                    onChange={this.nullValue}
+                    value={this.name} // to beused for below method, if the value is ''
+                    onChange={this.nullValue} // line 117 when empty ''
                     autoFocus
                   />
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </div>
               </Autocomplete>
-              <a href="#sign-up"><img src='/images/2037710.png' className='sign' onClick={showLogModal}></img></a>
+
               { this.state.markerPosition &&
                 <Marker
                 position={this.state.markerPosition}
-                size={new window.google.maps.Size(18, 22) }
-                anchor={new window.google.maps.Point(12, 14)}
                 /> }
+
+              <a href="#sign-up"><img src='/images/2037710.png' className='sign' onClick={showLogModal}></img></a>
               { this.state.logs.length > 0 && <LogLists logs={this.state.logs} /> }
               { this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
               { this.state.logModal && <Log onSubmit={this.addLog} /> }

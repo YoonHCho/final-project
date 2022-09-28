@@ -17,7 +17,7 @@ export default class Log extends React.Component {
 
   confirm(e) {
     e.preventDefault();
-    const { markerPosition, name, hideLogModal } = this.context;
+    const { markerPosition, name, hideLogModal, resetCoord } = this.context;
     const logLatLngName = {
       log: this.state.log,
       location: name,
@@ -27,6 +27,7 @@ export default class Log extends React.Component {
 
     this.props.onSubmit(logLatLngName);
     this.setState({ log: '' });
+    resetCoord(markerPosition.lat, markerPosition.lng);
     hideLogModal();
   }
 

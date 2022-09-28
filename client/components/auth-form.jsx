@@ -43,6 +43,8 @@ export default class AuthForm extends React.Component {
       .then(result => {
         if (result.error) {
           this.setState({ duplicate: true });
+        } else if (!result.error && action === 'sign-up') {
+          window.location.hash = 'sign-in';
         }
       })
       .catch(err => console.error(err));

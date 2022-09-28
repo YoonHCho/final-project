@@ -5,7 +5,6 @@ import AppContext from '../lib/app-context';
 import LogLists from './places';
 import PhotoUpload from './photo-upload';
 import ViewPhotos from './photo-lists';
-
 import PageContainer from './page-container';
 import parseRoute from '../lib/parse-route';
 import AuthForm from './auth-form';
@@ -27,11 +26,11 @@ export default class MapComponent extends React.Component {
     super(props);
     this.state = {
       firstLoad: true,
-      user: false,
       userLat: null,
       userLong: null,
       markerPosition: null,
       name: '',
+      user: false,
       logModal: false,
       logs: [],
       uploadPhoto: false,
@@ -40,6 +39,7 @@ export default class MapComponent extends React.Component {
       signUp: false,
       route: parseRoute(window.location.hash)
     };
+
     this.autocomplete = null;
     this.onLoad = this.onLoad.bind(this);
     this.onPlaceChanged = this.onPlaceChanged.bind(this);
@@ -48,7 +48,6 @@ export default class MapComponent extends React.Component {
     this.hideLogModal = this.hideLogModal.bind(this);
     this.addLog = this.addLog.bind(this);
     this.resetCoord = this.resetCoord.bind(this);
-
     this.renderPage = this.renderPage.bind(this);
   }
 
@@ -66,7 +65,6 @@ export default class MapComponent extends React.Component {
         route: parseRoute(window.location.hash)
       });
     });
-
   }
 
   onLoad(autocomplete) {
@@ -129,7 +127,7 @@ export default class MapComponent extends React.Component {
 
   hideLogModal() {
     if (this.state.logModal) {
-      this.setState({ logModal: false, markerPosition: null });
+      this.setState({ logModal: false, markerPosition: null, name: '' });
     }
     if (this.state.uploadPhoto) {
       this.setState({ uploadPhoto: false });
@@ -146,15 +144,14 @@ export default class MapComponent extends React.Component {
   }
 
   renderPage() {
-
     const { path } = this.state.route;
     if (path === 'sign-up' || path === 'sign-in') {
       return <AuthForm />;
     }
-
   }
 
   render() {
+    if (this.state.firstLoad) return null;
     let myLatLng;
     if (this.state.markerPosition) {
       myLatLng = this.state.markerPosition;
@@ -164,7 +161,6 @@ export default class MapComponent extends React.Component {
         lng: this.state.userLong
       };
     }
-    if (this.state.firstLoad) return null;
     const { markerPosition, name, logModal, logs, selectedId, route } = this.state;
     const { showLogModal, hideLogModal, resetCoord } = this;
     const contextValue = { markerPosition, name, logModal, logs, selectedId, route, showLogModal, hideLogModal, resetCoord };
@@ -180,7 +176,7 @@ export default class MapComponent extends React.Component {
             <GoogleMap
               mapContainerStyle={containerStyle}
               center={myLatLng}
-              zoom={10}
+              zoom={9}
               options={options}
             >
               <Autocomplete
@@ -190,7 +186,7 @@ export default class MapComponent extends React.Component {
                 <div>
                   <input
                     type='text'
-                    placeholder='Enter a place'
+                    placeholder='Enter a place &amp; select one'
                     className='input-style'
                     value={this.name}
                     onChange={this.nullValue}
@@ -199,13 +195,11 @@ export default class MapComponent extends React.Component {
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </div>
               </Autocomplete>
-              <a href="#sign-up"><img src='/images/2037710.png' className='sign' onClick={showLogModal}></img></a>
               { this.state.markerPosition &&
                 <Marker
                 position={this.state.markerPosition}
-                size={new window.google.maps.Size(18, 22) }
-                anchor={new window.google.maps.Point(12, 14)}
                 /> }
+              <a href="#sign-up"><img src='/images/2037710.png' className='sign' onClick={showLogModal}></img></a>
               { this.state.logs.length > 0 && <LogLists logs={this.state.logs} /> }
               { this.state.name && <button className="save" name='logModal' onClick={this.showLogModal}>SAVE</button> }
               { this.state.logModal && <Log onSubmit={this.addLog} /> }

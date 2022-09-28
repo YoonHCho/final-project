@@ -13,7 +13,6 @@ export default class PhotoUpload extends React.Component {
 
   handlePhotoSubmit(e) {
     e.preventDefault();
-
     const { selectedId, hideLogModal } = this.context;
     const formData = new FormData();
 
@@ -62,5 +61,4 @@ export default class PhotoUpload extends React.Component {
     );
   }
 }
-
 PhotoUpload.contextType = AppContext;

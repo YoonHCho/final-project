@@ -66,5 +66,4 @@ export default class ViewPhotos extends React.Component {
 
   }
 }
-
 ViewPhotos.contextType = AppContext;

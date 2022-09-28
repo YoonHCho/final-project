@@ -18,12 +18,6 @@ const db = new pg.Pool({
 
 const app = express();
 
-// started for feature 7 user can sign up
-// const publicPath = path.join(__dirname, 'public');
-// if (process.env.NODE_ENV === 'development') {
-//   app.use(require('./dev-middleware')(publicPath));
-// }
-
 app.use(express.json());
 
 app.use(staticMiddleware);
@@ -48,6 +42,7 @@ app.get('/api/log/:id', (req, res, next) => {
   if (!id) {
     throw new ClientError(400, 'id must be a positive integer');
   }
+
   const sql = `
     SELECT "logId",
            "log",
@@ -75,12 +70,11 @@ app.get('/api/photos/:logid', (req, res, next) => {
     FROM   "photos"
     WHERE  "logId" = $1
   `;
-
   const logId = Number(req.params.logid);
+
   if (typeof logId !== 'number' || logId <= 0 || isNaN(logId)) {
     throw new ClientError(400, 'id must be a positive integer');
   }
-
   const params = [logId];
 
   db.query(sql, params)
@@ -100,8 +94,8 @@ app.post('/api/log/', (req, res, next) => {
   VALUES             ($1, $2, $3, $4)
   RETURNING *
   `;
-
   const { log, location, latitude, longitude } = req.body;
+
   if (!log) {
     throw new ClientError(400, 'log is a required field');
   } else if (!location) {
@@ -111,7 +105,6 @@ app.post('/api/log/', (req, res, next) => {
   } else if (!longitude) {
     throw new ClientError(400, 'longitude is a required field');
   }
-
   const params = [log, location, latitude, longitude];
 
   db.query(sql, params)
@@ -136,8 +129,8 @@ app.post('/api/upload/', uploadsMiddleware, (req, res, next) => {
   } else if (!image) {
     throw new ClientError(400, 'image is a required field');
   }
-
   const params = [logId, image];
+
   db.query(sql, params)
     .then(result => {
       const created = result.rows[0];
@@ -148,9 +141,11 @@ app.post('/api/upload/', uploadsMiddleware, (req, res, next) => {
 
 app.post('/api/auth/sign-up', (req, res, next) => {
   const { username, password } = req.body;
+
   if (!username || !password) {
     throw new ClientError(400, 'username and password are required fields');
   }
+
   argon2
     .hash(password)
     .then(hashedPassword => {

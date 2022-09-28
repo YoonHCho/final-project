@@ -4,5 +4,4 @@ class ClientError {
     this.message = message;
   }
 }
-
 module.exports = ClientError;

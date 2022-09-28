@@ -4,5 +4,4 @@ class UsernameError {
     this.message = message;
   }
 }
-
 module.exports = UsernameError;

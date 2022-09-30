@@ -1,5 +1,4 @@
 require('dotenv/config');
-// const path = require('path');
 const argon2 = require('argon2');
 const express = require('express');
 const staticMiddleware = require('./static-middleware');
@@ -116,7 +115,8 @@ app.post('/api/log/', (req, res, next) => {
 });
 
 app.post('/api/upload/', uploadsMiddleware, (req, res, next) => {
-  const image = `/images/${req.file.filename}`;
+  const fileUrl = req.file.location;
+  const image = `${fileUrl}`;
   const sql = `
     INSERT INTO "photos" ("logId", "image")
     VALUES               ($1, $2)

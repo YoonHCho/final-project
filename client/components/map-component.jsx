@@ -10,8 +10,11 @@ import parseRoute from '../lib/parse-route';
 import AuthForm from './auth-form';
 
 const containerStyle = {
-  width: '100%',
-  height: '100vh'
+  position: 'absolute',
+  top: '0',
+  bottom: '0',
+  right: '0',
+  left: '0'
 };
 
 const options = {
@@ -171,6 +174,7 @@ export default class MapComponent extends React.Component {
           <LoadScript
             googleMapsApiKey={process.env.GOOGLE_MAPS_API_KEY}
             libraries={libraries}
+            className=""
           >
 
             <GoogleMap
@@ -190,7 +194,6 @@ export default class MapComponent extends React.Component {
                     className='input-style'
                     value={this.name}
                     onChange={this.nullValue}
-                    autoFocus
                   />
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </div>

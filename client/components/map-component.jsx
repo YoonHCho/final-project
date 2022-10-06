@@ -55,10 +55,9 @@ export default class MapComponent extends React.Component {
   }
 
   componentDidMount() {
-    // navigator.geolocation.getCurrentPosition(userCoords => {
-    //   this.setState({ userLat: userCoords.coords.latitude, userLong: userCoords.coords.longitude, firstLoad: false });
-    // });
-    this.setState({ userLat: 33.8674, userLong: -117.9981, firstLoad: false });
+    navigator.geolocation.getCurrentPosition(userCoords => {
+      this.setState({ userLat: userCoords.coords.latitude, userLong: userCoords.coords.longitude, firstLoad: false });
+    });
 
     fetch('/api/log/')
       .then(result => result.json())

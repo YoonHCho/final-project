@@ -1,17 +1,28 @@
-# Travel-Map-Journal
+# Table of Contents
+* [Travel-Map-Journal](#travel-map-journal-flightdeparture)
+* [Why I Built This](#why-i-built-this-bulb)
+* [Live Demo](#live-demo-link)
+* [Technologies Used](#technologies-used-🧑‍💻)
+* [Features](#features-📝)
+* [App Preview](#app-preview-mag)
+* [Features To Be Implemented](#feature-to-be-implemented-🔭)
+* [System Requirements](#system-requirements-gear)
+* [Getting Started](#getting-started-⚡)
+
+# Travel-Map-Journal :flight_departure:
 A web application for travel lovers who wants to save the places they've visited:
 enter journal entry and upload pictures.
 
-# Why I Built This
+# Why I Built This :bulb:
 I am really bad with directions and Google Maps is my co-pilot whenever I'm in the
 driver's seat. I also had a goal of having a world map on a wall, placing a pin
 and a picture/postcard to the places that I've visited. Therefore, I thought of
 doing it in a digitized way hence coming up with this project.
 
-# Live Demo
+# Live Demo :link:
 [Dokku Deployment](https://travel-map-journal.yoonhc.com/)
 
-# Technologies Used
+# Technologies Used 🧑‍💻
 * UI Framework: **React**
 * JavaScript Runtime: **Node.js**
 * Server Framework: **Express**
@@ -20,10 +31,10 @@ doing it in a digitized way hence coming up with this project.
 * Deployment Platform: **Dokku**
 * Languages: **JavaScript (ES6)**, **HTML5**, **CSS3**, **SQL**
 
-# Database Schema
+### Database Schema
 ![Database Schema](./server/public/images/schema.png "Database Schema")
 
-# Features
+# Features 📝
 * User can find a place on a map
 * User can create a log entry for the place
 * User can view saved places on a map
@@ -31,38 +42,36 @@ doing it in a digitized way hence coming up with this project.
 * User can upload a photograph in their log entry
 * User can sign up
 
-# Live Demo
-### Search a place
+# App Preview  :mag:
+### Search a place and save a log
 * Once a user inputs a place to search and selects one of the suggestion results,
 a marker will appear on the map along with a **SAVE** button on the bottom right.
-
-!!! need to get the demo here !!!
-
-### Save a log
 * Click on the **SAVE** button to log an entry: can cancel or confirm to save.
 
-!!! need to get the demo here !!!
+![Search & Log Sample](./server/public/images/demo-search-log.gif "Search & Log Sample")
 
-### View photos
-* Click on one of the saved places, click on **View Photo** to see the photo(s)
-uploaded previously. If there is no photo uploaded, modal will show that there
+
+### View Photos
+* Click on one of the saved places, and click on **View Photo** to see the photo(s)
+uploaded previously. If there is no photo uploaded, a modal will show that there
 are no photos uploaded.
 
-!!! need to get the demo here !!!
+![View Photo Sample](./server/public/images/view-photo.gif "View Photo Sample")
 
-# Feature to be Implemented
+
+# Features To Be Implemented 🔭
 * User can sign in
 * User can edit a log entry for a place
 * User can delete a log entry for a place
 
-# System Requirements
+# System Requirements :gear:
 * React (v16.6+)
 * Node (v18.2.0+)
 * PostgreSQL (v14.3+)
 ### Other Requirement
 * Google API Key
 
-# Getting Started
+# Getting Started ⚡
 1. Clone repository.
 
     ```https://github.com/YoonHCho/final-project.git```
@@ -96,3 +105,7 @@ are no photos uploaded.
 8. Start the application. It should be viewable in your browser at ```http://localhost:3000```.
 
     ```npm run dev```
+
+9. Enjoy the app 😁
+
+[Back To The Top](#table-of-contents)

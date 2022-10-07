@@ -9,7 +9,7 @@
 * [System Requirements](#system-requirements-gear)
 * [Getting Started](#getting-started-⚡)
 
-# Travel-Map-Journal :flight_departure:
+# Travel-Map-Journals :flight_departure:
 A web application for travel lovers who wants to save the places they've visited:
 enter journal entry and upload pictures.
 
@@ -74,9 +74,9 @@ are no photos uploaded.
 # Getting Started ⚡
 1. Clone repository.
 
-    ```https://github.com/YoonHCho/final-project.git```
+    ```https://github.com/YoonHCho/travel-map-journals```
 
-2. Install dependencies in ```package.json``` with npm.
+2. Install dependencies in ```package.json``` with npm (if needed).
 
     ```npm install```
 
@@ -102,10 +102,15 @@ are no photos uploaded.
 
     ```npm run db:import```
 
-8. Start the application. It should be viewable in your browser at ```http://localhost:3000```.
+8. Build and start the application.
 
-    ```npm run dev```
+    ```
+    npm run build
+    npm run start
+    ```
 
-9. Enjoy the app 😁
+9. App should be viewable in your browser at ```http://localhost:3000```
+
+10. Enjoy the app 😁
 
 [Back To The Top](#table-of-contents)

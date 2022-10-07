@@ -167,14 +167,16 @@ export default class MapComponent extends React.Component {
     const { markerPosition, name, logModal, logs, selectedId, route } = this.state;
     const { showLogModal, hideLogModal, resetCoord } = this;
     const contextValue = { markerPosition, name, logModal, logs, selectedId, route, showLogModal, hideLogModal, resetCoord };
+    const loading = <div className="lds-ring"><div></div><div></div><div></div><div></div></div>;
 
     return (
+
       <AppContext.Provider value={contextValue}>
         <>
           <LoadScript
             googleMapsApiKey={process.env.GOOGLE_MAPS_API_KEY}
             libraries={libraries}
-            className=""
+            loadingElement={loading}
           >
 
             <GoogleMap

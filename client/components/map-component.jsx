@@ -154,7 +154,7 @@ export default class MapComponent extends React.Component {
   }
 
   render() {
-    if (this.state.firstLoad) return <div className="lds-ring"><div></div><div></div><div></div><div></div></div>;
+    if (this.state.firstLoad) return null;
     let myLatLng;
     if (this.state.markerPosition) {
       myLatLng = this.state.markerPosition;

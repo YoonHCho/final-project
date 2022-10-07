@@ -50,17 +50,3 @@ ALTER TABLE "logs" ADD CONSTRAINT "logs_fk0" FOREIGN KEY ("userId") REFERENCES "
 
 ALTER TABLE "photos" ADD CONSTRAINT "photos_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
 ALTER TABLE "photos" ADD CONSTRAINT "photos_fk1" FOREIGN KEY ("logId") REFERENCES "logs"("logId");
-
-
-
-
-
-
-
-
-
-
-
-
-
--- timestamptz(6) NOT NULL default now(),
